@@ -1,0 +1,42 @@
+---
+title: "Homework 6"
+author: "Alexis Colangelo"
+date: "11/17/2019"
+output: github_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(rvest)
+
+
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  fig.width = 8,
+  fig.height = 6,
+  out.width = "90%"
+  )
+
+  options(
+    ggplot2.continuous.colour = "viridis",
+    ggplot2.continuous.fill = "viridis"
+  )
+  
+  scale_colour_discrete = scale_colour_viridis_d
+  scale_fill_discrete = scale_fill_viridis_d
+  
+  theme_set(theme_minimal() + theme(legend.position = "bottom"))
+  
+```
+
+## Problem 1
+In this problem, you will analyze data gathered to understand the effects of several variables on a child’s birthweight. This dataset consists of roughly 4000 children. 
+
+Load and clean the data for regression analysis (i.e. convert numeric to factor where appropriate, check for missing data, etc.).
+
+
+
+
