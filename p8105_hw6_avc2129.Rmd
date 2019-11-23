@@ -33,10 +33,12 @@ knitr::opts_chunk$set(
 ```
 
 ## Problem 1
-In this problem, you will analyze data gathered to understand the effects of several variables on a child’s birthweight. This dataset consists of roughly 4000 children. 
 
 Load and clean the data for regression analysis (i.e. convert numeric to factor where appropriate, check for missing data, etc.).
 
+```{r}
+birthweight_data = read_csv(file = "./data/birthweight.csv")
+```
 
 
 
