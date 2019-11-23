@@ -34,7 +34,7 @@ knitr::opts_chunk$set(
 
 ## Problem 1
 
-Load and clean the data for regression analysis (i.e. convert numeric to factor where appropriate, check for missing data, etc.).
+Load and clean the data for regression analysis:
 
 ```{r}
 birthweight_data = read_csv(file = "./data/birthweight.csv") %>%
@@ -56,6 +56,11 @@ birthweight_data = read_csv(file = "./data/birthweight.csv") %>%
              "8" = "other"),
       mrace = factor(mrace)
   ) %>% view()
+```
+
+There are no missing data:
+```{r}
+table(is.na(birthweight_data))
 ```
 
 
