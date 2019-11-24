@@ -148,3 +148,33 @@ cv_bwt %>%
 ```
 
 As we can see from the violin plot, by comparing all three of the models' root mean squared errors, it looks like model 1 (proposed model) sits the lowest on the graph, making it a better fit according to prediction error distributions. The next best model is model_3 (interaction effects).
+
+# Problem 2
+
+For this problem, we’ll use the 2017 Central Park weather data that we’ve seen elsewhere. The code chunk below (adapted from the course website) will download these data.
+
+```{r}
+weather_df = 
+  rnoaa::meteo_pull_monitors(
+    c("USW00094728"),
+    var = c("PRCP", "TMIN", "TMAX"), 
+    date_min = "2017-01-01",
+    date_max = "2017-12-31") %>%
+  mutate(
+    name = recode(id, USW00094728 = "CentralPark_NY"),
+    tmin = tmin / 10,
+    tmax = tmax / 10) %>%
+  select(name, id, everything())
+```
+
+The boostrap is helpful when you’d like to perform inference for a parameter / value / summary that doesn’t have an easy-to-write-down distribution in the usual repeated sampling framework. We’ll focus on a simple linear regression with tmax as the response and tmin as the predictor, and are interested in the distribution of two quantities estimated from these data:
+* r^2
+* log(β^0 ∗ β^1)
+
+Use 5000 bootstrap samples and, for each bootstrap sample, produce estimates of these two quantities. 
+
+Plot the distribution of your estimates, and describe these in words. 
+
+Using the 5000 bootstrap estimates, identify the 2.5% and 97.5% quantiles to provide a 95% confidence interval for r^2 and log(β^0∗β^1). 
+
+Note: broom::glance() is helpful for extracting r^2 from a fitted regression, and broom::tidy() (with some additional wrangling) should help in computing log(β^0∗β^1).
