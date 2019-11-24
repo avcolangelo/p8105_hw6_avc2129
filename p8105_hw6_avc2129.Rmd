@@ -10,6 +10,8 @@ editor_options:
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(rvest)
+library(modelr)
+library(mgcv)
 
 
 knitr::opts_chunk$set(
@@ -32,9 +34,9 @@ knitr::opts_chunk$set(
   
 ```
 
-## Problem 1
+# Problem 1
 
-Load and clean the data for regression analysis:
+## Load and clean the data for regression analysis:
 
 ```{r}
 birthweight_data = read_csv(file = "./data/birthweight.csv") %>%
@@ -42,6 +44,7 @@ birthweight_data = read_csv(file = "./data/birthweight.csv") %>%
     babysex = 
       recode(babysex, "1" = "male", "2" = "female"),
       babysex = factor(babysex),
+    fincome = factor(fincome),
     frace = 
       recode(frace, "1" = "white", "2" = "black", 
              "3" = "asian", "4" = "puerto_rican", 
@@ -58,9 +61,46 @@ birthweight_data = read_csv(file = "./data/birthweight.csv") %>%
   ) %>% view()
 ```
 
-There are no missing data:
+There are no missing data in this datset:
 ```{r}
 table(is.na(birthweight_data))
 ```
+
+## Propose a regression model for birthweight. This model may be based on a hypothesized structure for the factors that underly birthweight, on a data-driven model-building process, or a combination of the two. 
+
+```{r}
+model_1 = step(lm(bwt ~., data = birthweight_data), direction = "backward")
+```
+
+By using the backwards elimination method, the regression model I propose is:
+bwt = babysex + bhead + blength + delwt + gaweeks + mheight + mrace + parity + ppwt + smoken
+    
+## Describe your modeling process and show a plot of model residuals against fitted values – use add_predictions and add_residuals in making this plot.
+The backwards elimination procedure starts with the full model and the least significant variables. According to the scatterplot, we can see that the residuals are pretty evenly
+spread out around zero, but there are some outliers. 
+ 
+```{r}
+model_1_data =
+    birthweight_data %>% 
+    select(
+     babysex, bhead, blength, delwt, gaweeks, mheight, 
+     mrace, parity, ppwt, smoken, bwt) 
+
+model_1_plot =
+  model_1_data %>%
+  modelr::add_residuals(model_1) %>%
+  modelr::add_predictions(model_1) %>%
+  ggplot(aes(x = pred, y = resid)) + geom_point()
+
+model_1_plot
+
+```
+
+Compare your model to two others:
+
+* One using length at birth and gestational age as predictors (main effects only)
+* One using head circumference, length, sex, and all interactions (including the three-way interaction) between these
+
+Make this comparison in terms of the cross-validated prediction error; use crossv_mc and functions in purrr as appropriate.
 
 
