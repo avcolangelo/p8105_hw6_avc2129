@@ -174,6 +174,7 @@ The boostrap is helpful when you’d like to perform inference for a parameter /
 
 Use 5000 bootstrap samples and, for each bootstrap sample, produce estimates of these two quantities. 
 
+Bootstrapping 5000 samples:
 ```{r}
 set.seed(3)
 
@@ -183,11 +184,42 @@ boot_straps =
   mutate(
     models = map(strap, ~lm(tmax ~ tmin, data = .x) ),
     results_r = map(models, broom::glance),
-    results_log = map(models, broom::tidy)) 
+    results_l = map(models, broom::tidy)) %>%
+  select(-models, -strap) 
+
 ```
 
+R-squared estimates:
+```{r}
+boot_straps_r =
+  boot_straps %>%
+  unnest(results_r) %>%
+  select(.id, r.squared)
 
+boot_straps_r
+```
+
+log(β^0 ∗ β^1) estimates:
+```{r}
+boot_straps_log =
+  boot_straps %>%
+  unnest(results_l) %>%
+  select(.id, term, estimate) %>%
+  pivot_wider(
+    names_from = "term",
+    values_from = "estimate") %>%
+  mutate(
+    log_results = log(`(Intercept)` * tmin))
+
+boot_straps_log
+```
+  
 Plot the distribution of your estimates, and describe these in words. 
+
+```{r}
+
+```
+
 
 Using the 5000 bootstrap estimates, identify the 2.5% and 97.5% quantiles to provide a 95% confidence interval for r^2 and log(β^0∗β^1). 
 
