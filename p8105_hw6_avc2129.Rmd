@@ -165,6 +165,7 @@ weather_df =
     tmin = tmin / 10,
     tmax = tmax / 10) %>%
   select(name, id, everything())
+
 ```
 
 The boostrap is helpful when you’d like to perform inference for a parameter / value / summary that doesn’t have an easy-to-write-down distribution in the usual repeated sampling framework. We’ll focus on a simple linear regression with tmax as the response and tmin as the predictor, and are interested in the distribution of two quantities estimated from these data:
@@ -172,6 +173,19 @@ The boostrap is helpful when you’d like to perform inference for a parameter /
 * log(β^0 ∗ β^1)
 
 Use 5000 bootstrap samples and, for each bootstrap sample, produce estimates of these two quantities. 
+
+```{r}
+set.seed(3)
+
+boot_straps = 
+  weather_df %>% 
+  modelr::bootstrap(n = 5000) %>%
+  mutate(
+    models = map(strap, ~lm(tmax ~ tmin, data = .x) ),
+    results_r = map(models, broom::glance),
+    results_log = map(models, broom::tidy)) 
+```
+
 
 Plot the distribution of your estimates, and describe these in words. 
 
