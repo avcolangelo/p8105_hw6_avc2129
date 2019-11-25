@@ -174,7 +174,7 @@ The boostrap is helpful when you’d like to perform inference for a parameter /
 
 Note: broom::glance() is helpful for extracting r^2 from a fitted regression, and broom::tidy() (with some additional wrangling) should help in computing log(β^0∗β^1).
 
-Use 5000 bootstrap samples and, for each bootstrap sample, produce estimates of these two quantities. 
+## Use 5000 bootstrap samples and, for each bootstrap sample, produce estimates of these two quantities. 
 
 Bootstrapping 5000 samples:
 ```{r}
@@ -216,7 +216,7 @@ boot_straps_log =
 boot_straps_log
 ```
   
-Plot the distribution of your estimates, and describe these in words. 
+## Plot the distribution of your estimates, and describe these in words. 
 
 Distribution of R-squared estimates:
 ```{r}
@@ -239,5 +239,35 @@ plot_log
 This plot shows that the distribution of log(β^0 ∗ β^1) estimates from the bootstrapping are normally distributed.
 
 
-Using the 5000 bootstrap estimates, identify the 2.5% and 97.5% quantiles to provide a 95% confidence interval for r^2 and log(β^0∗β^1). 
+## Using the 5000 bootstrap estimates, identify the 2.5% and 97.5% quantiles to provide a 95% confidence interval for r^2 and log(β^0∗β^1). 
 
+r-squared:
+```{r}
+#lower limit = 0.8945
+boot_straps_r %>%
+  pull(r.squared) %>%
+  quantile(0.025)
+
+#upper limit = 0.9268
+boot_straps_r %>%
+  pull(r.squared) %>%
+  quantile(0.975)
+```
+95% Confidence Interval for the r-squared estimates using the 5000 bootstraps is:
+95% CI: (0.8945, 0.9268)
+
+
+log(β^0∗β^1):
+```{r}
+#lower limit = 1.9651
+boot_straps_log %>%
+  pull(log_results) %>%
+  quantile(0.025)
+
+#upper limit = 2.0597
+boot_straps_log %>%
+  pull(log_results) %>%
+  quantile(0.975)
+```
+95% Confidence Interval for the log(β^0∗β^1) estimates using the 5000 bootstraps is:
+95% CI: (1.9651, 2.0597)
